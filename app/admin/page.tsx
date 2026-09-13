@@ -1,0 +1,32 @@
+'use client'
+
+import { FormEvent, useState } from 'react'
+import { AlertTriangle, BarChart3, CheckCircle2, LockKeyhole, Receipt, ShieldCheck, Sparkles, Users } from 'lucide-react'
+
+const adminPassword = '12345678'
+
+export default function AdminPage() {
+  const [password, setPassword] = useState('')
+  const [authorized, setAuthorized] = useState(false)
+  const [error, setError] = useState('')
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (password === adminPassword) {
+      setAuthorized(true)
+      setError('')
+    } else {
+      setError('That password is not correct.')
+    }
+  }
+
+  if (!authorized) {
+    return <main className="grid min-h-screen place-items-center bg-background p-5"><section className="w-full max-w-md rounded-3xl border border-border bg-card p-7 shadow-2xl shadow-primary/10 md:p-9"><div className="flex items-center gap-3"><span className="grid size-11 place-items-center rounded-2xl bg-primary text-primary-foreground"><LockKeyhole className="size-5" /></span><div><p className="text-sm font-semibold text-primary">SevaSphere cooperative</p><h1 className="text-2xl font-bold tracking-tight">Admin access</h1></div></div><p className="mt-6 text-sm leading-6 text-muted-foreground">This dashboard is private to the cooperative team. Enter the admin password to continue.</p><form onSubmit={submit} className="mt-6 flex flex-col gap-3"><label htmlFor="admin-password" className="text-sm font-semibold">Password</label><input id="admin-password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} className="rounded-xl border border-border bg-background px-3 py-3 outline-none ring-primary/30 focus:ring-4" autoFocus />{error && <p role="alert" className="text-sm text-[#a43e31]">{error}</p>}<button type="submit" className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground"><LockKeyhole className="size-4" /> Enter dashboard</button></form></section></main>
+  }
+
+  return <main className="min-h-screen bg-background"><header className="flex items-center justify-between border-b border-border bg-card px-5 py-4 md:px-8"><div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground"><Sparkles className="size-5" /></span><span className="text-lg font-bold tracking-tight">SevaSphere</span><span className="hidden text-sm text-muted-foreground sm:inline">/ Cooperative admin</span></div><div className="flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-sm font-semibold"><span className="grid size-7 place-items-center rounded-full bg-[#dfe9e1] text-xs font-bold text-[#245f47]">YK</span> Yash Kumar</div></header><div className="mx-auto max-w-7xl p-5 md:p-8"><div className="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><p className="text-sm font-medium text-primary">Cooperative operations</p><h1 className="mt-1 text-3xl font-bold tracking-tight">Good morning, Yash.</h1><p className="mt-2 text-sm text-muted-foreground">Your private view of members, payouts, and shared funds.</p></div><span className="inline-flex w-fit items-center gap-2 rounded-full bg-[#dfeee5] px-3 py-1.5 text-xs font-semibold text-[#1e684c]"><CheckCircle2 className="size-3.5" /> All systems healthy</span></div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><AdminStat label="Active workers" value="184" sub="+12 this month" icon={Users} /><AdminStat label="Jobs today" value="426" sub="91% fulfilled" icon={Receipt} /><AdminStat label="Median response" value="8 min" sub="2 min faster this week" icon={BarChart3} /><AdminStat label="Open disputes" value="7" sub="2 need review" icon={AlertTriangle} /></div><section className="mt-6 rounded-2xl border border-border bg-card p-5"><h2 className="font-semibold">Co-op balance</h2><p className="mt-1 text-sm text-muted-foreground">Available only to the cooperative team for approved shared-fund use.</p><p className="mt-5 text-3xl font-bold">INR 17,844</p></section></div></main>
+}
+
+function AdminStat({ label, value, sub, icon: Icon }: { label: string; value: string; sub: string; icon: typeof Users }) {
+  return <button type="button" className="rounded-2xl border border-border bg-card p-4 text-left transition hover:-translate-y-0.5 hover:border-primary/40"><div className="flex items-start justify-between"><span className="text-xs font-medium text-muted-foreground">{label}</span><Icon className="size-4 text-primary" /></div><p className="mt-3 text-2xl font-bold">{value}</p><p className="mt-1 text-xs text-muted-foreground">{sub}</p></button>
+}
